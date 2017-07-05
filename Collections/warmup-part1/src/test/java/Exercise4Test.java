@@ -121,6 +121,6 @@ public class Exercise4Test {
 
     @Test
     public void testSortMethodOverStringList() {
-//        testingStringValues.sort(//TODO add comparator);
+        testingStringValues.sort(testingStringValues.c);
     }
 }

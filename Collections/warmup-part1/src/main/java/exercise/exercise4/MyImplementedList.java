@@ -1,5 +1,9 @@
 package exercise.exercise4;
 
+import com.sun.deploy.util.ArrayUtil;
+
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /**
@@ -160,9 +164,29 @@ public class MyImplementedList<E> implements Iterable<E> {
     //TODO m) implement a method, that uses a Comparator, for your data structure to sort the elements
     //TODO you should name it: void sort(Comparator<? super E> c)
     //TODO create a custom comparator that compares objects by their "what you want" :D - HINT Comparator interface
+    public void sort(Comparator<? super E> c){
 
+    }
 
+//    public int compareTo(E o) {
+//        if ( elementData.equals(o) ) return 0;
+//        if ( (E) elementData > o ) return 1;
+//        return -1;
+//    }
 
+//    public int compare(E o1, E o2) {
+//        return o1.hashCode() - o2.hashCode();
+//    }
+
+    public class Comparator<E> {
+        public int compare(E a, E b){
+            if(a.hashCode() < b.hashCode())
+                return 1;
+            return 0;
+        }
+    }
+
+    public Comparator<E> c = new Comparator<E>();
 
 
     class PropriulMeuIterator implements Iterator<E>{
