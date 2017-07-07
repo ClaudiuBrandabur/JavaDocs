@@ -3,6 +3,7 @@ package exercise5;
 import exercise4.MyHashMap;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Set;
 public class MyHashMapWithMyImplementedList {
 
     // TODO uncomment the following line and add your MyImplementedList implementation to the project
-//    private MyImplementedList<LinkedList<MyEntry>> buckets;
+    private MyImplementedList<LinkedList<MyEntry>> buckets;
 
     private final int BUCKET_ARRAY_SIZE = 16;
 
