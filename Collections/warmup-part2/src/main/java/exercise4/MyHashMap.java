@@ -30,7 +30,9 @@ public class MyHashMap {
 
     public String get(String key) {
         // TODO
-        int index = key.hashCode() % BUCKET_ARRAY_SIZE;
+        if (key == null) return null;
+
+        int index = Math.abs(key.hashCode()) % BUCKET_ARRAY_SIZE;
 
         LinkedList<MyEntry> specificBucket = buckets.get(index);
 
@@ -43,6 +45,18 @@ public class MyHashMap {
 
     public void put(String key, String value) {
         // TODO
+        int index = Math.abs(key.hashCode()) % BUCKET_ARRAY_SIZE;
+        LinkedList<MyEntry> specificBucket = buckets.get(index);
+
+        for(int i=0; i< specificBucket.size(); i++) {
+            if (specificBucket.get(i).getKey().equals(key)) {
+                specificBucket.get(i).setValue(value);
+                return;
+            }
+        }
+
+        specificBucket.add(new MyEntry(key,value));
+
     }
 
     public Set<String> keySet() {
