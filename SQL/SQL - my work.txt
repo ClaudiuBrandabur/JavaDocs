@@ -1,0 +1,153 @@
+LOCATIONS
+
+  LOCATION_ID     NUMBER 		PRIMARY KEY,
+  STREET_ADDRESS  VARCHAR2(40),
+  POSTAL_CODE     VARCHAR2(12),
+  CITY            VARCHAR2(30)     	NOT NULL,
+  STATE_PROVINCE  VARCHAR2(25)
+
+
+DEPARTMENTS
+
+  DEPARTMENT_ID    NUMBER 		PRIMARY KEY,
+  DEPARTMENT_NAME  VARCHAR2(30)    	NOT NULL,
+  LOCATION_ID      NUMBER
+
+JOBS
+
+  JOB_ID      NUMBER 			PRIMARY KEY,
+  JOB_TITLE   VARCHAR2(35)        	NOT NULL,
+  MIN_SALARY  NUMBER(6),
+  MAX_SALARY  NUMBER(6)
+
+
+EMPLOYEES 
+
+  EMPLOYEE_ID     NUMBER 		PRIMARY KEY,
+  FIRST_NAME      VARCHAR2(20),
+  LAST_NAME       VARCHAR2(25)     	NOT NULL,
+  EMAIL           VARCHAR2(25)     	NOT NULL,
+  PHONE_NUMBER    VARCHAR2(20),
+  HIRE_DATE       DATE                  NOT NULL,
+  JOB_ID          NUMBER	     	NOT NULL,
+  SALARY          NUMBER(8,2),
+  COMMISSION_PCT  NUMBER(2,2),
+  MANAGER_ID      NUMBER,
+  DEPARTMENT_ID   NUMBER
+
+****************************************************************
+
+CREATE SEQUENCE TAB_DEPARTMENTS_SEQ
+ START WITH     1
+ INCREMENT BY   1;
+
+CREATE SEQUENCE TAB_EMPLOYEES_SEQ
+ START WITH     1
+ INCREMENT BY   1;
+
+CREATE SEQUENCE TAB_JOBS_SEQ
+ START WITH     1
+ INCREMENT BY   1;
+
+CREATE SEQUENCE ZTH_SEQ
+ START WITH     406
+ INCREMENT BY   1;
+
+****************************************************************
+
+1.	select * from employees
+	select * from departments
+	select * from jobs
+	select FIRST_NAME "First Name", LAST_NAME "Last Name" from EMPLOYEES
+
+2.	select FIRST_NAME "First Name", LAST_NAME "Last Name" from EMPLOYEES where DEPARTMENT_ID = 50
+
+3.	update Employees set salary=salary+0.3*salary where DEPARTMENT_ID = 50
+
+4.	DELETE FROM EMPLOYEES WHERE EMPLOYEE_ID = 101;
+
+5.	select * 
+from employees
+where JOB_ID = 'IT_PROG'
+order by FIRST_NAME 
+
+6.	select count(employee_id) as "Numar angajati"
+ from employees emp 
+ where emp.JOB_ID = 'IT_PROG'
+
+7.	select e.FIRST_NAME, e.LAST_NAME, d.DEPARTMENT_NAME
+from EMPLOYEES e INNER JOIN DEPARTMENTS d
+on e.DEPARTMENT_ID = d.DEPARTMENT_ID and d.DEPARTMENT_ID = 50
+order by e.FIRST_NAME
+
+8.	select e.FIRST_NAME, e.LAST_NAME, d.DEPARTMENT_NAME, l.CITY
+from EMPLOYEES e INNER JOIN (DEPARTMENTS d INNER JOIN LOCATIONS l
+on d.LOCATION_ID = l.LOCATION_ID and l.LOCATION_ID=1700) on e.DEPARTMENT_ID = d.DEPARTMENT_ID 
+order by e.FIRST_NAME
+
+9.	CREATE VIEW MyView AS
+SELECT e.employee_id, e.first_name, d.department_name
+FROM employees e inner join departments d
+on e.department_id = d.department_id
+
+10.	SELECT sysdate from dual;
+
+11.	select to_char(sysdate, 'dd-MM-yyyy') from dual
+
+12.	select to_date ('25-11-2014', 'dd-MM-yyyy') from dual
+
+13.	select UPPER(FIRST_NAME) "First Name", LOWER(EMAIL) "Email" from employees
+
+14.	select 'First Name: ' || FIRST_NAME "First Name" from employees
+
+15.	select count(employee_id) "Numar Angajati" from employees
+
+16.	select count(employee_id) "Numar Angajati" from employees where JOB_ID = 'IT_PROG'
+
+17.	select count(employee_id) "Numar Angajati", JOB_ID from employees 
+group by JOB_ID
+
+18.	select avg(salary) "Salariu mediu" from employees 
+where department_id = 50
+
+19.	select max(e.salary) "Salariu maxim", min(e.salary) "Salariu minim", l.city
+from EMPLOYEES e inner join (DEPARTMENTS d inner join LOCATIONS l 
+on d.location_id = l.location_id and l.location_id = 1700) on e.department_id = d.department_id
+group by l.city
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
