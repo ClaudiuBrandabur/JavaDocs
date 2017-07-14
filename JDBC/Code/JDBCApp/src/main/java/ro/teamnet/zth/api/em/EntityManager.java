@@ -16,4 +16,7 @@ public interface EntityManager {
     <T> T update(T entity);
     void delete(Object entity);
     <T> List<T> findByParams(Class<T> entityClass, Map<String, Object> params);
+    <T> List<T> myFindMethod(String string);
+    <T> void multipleInsert(List<T> enities);
+
 }

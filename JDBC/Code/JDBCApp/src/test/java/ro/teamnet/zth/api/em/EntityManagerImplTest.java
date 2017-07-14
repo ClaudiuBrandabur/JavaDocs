@@ -88,6 +88,8 @@ public class EntityManagerImplTest {
 
         long duration = (endTime - startTime);
         System.out.println("Time to execute main: " + duration + " ms");
+
+        System.out.println(myEntity.myFindMethod("ing"));
     }
 
 }

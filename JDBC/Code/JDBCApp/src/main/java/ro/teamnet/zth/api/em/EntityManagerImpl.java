@@ -3,6 +3,8 @@ package ro.teamnet.zth.api.em;
 import ro.teamnet.zth.api.annotations.Column;
 import ro.teamnet.zth.api.annotations.Id;
 import ro.teamnet.zth.api.database.DBManager;
+import ro.teamnet.zth.appl.domain.Department;
+import ro.teamnet.zth.appl.domain.Employee;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -16,7 +18,7 @@ import java.util.Map;
 /**
  * Created by Claudiu.Brandabur on 13-Jul-17.
  */
-public class EntityManagerImpl implements EntityManager{
+public class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> T findById(Class<T> entityClass, Long id) {
@@ -26,7 +28,7 @@ public class EntityManagerImpl implements EntityManager{
         List<ColumnInfo> columns = EntityUtils.getColumns(entityClass);
         List<Field> ColumnFields = EntityUtils.getFieldsByAnnotations(entityClass, Column.class);
         Field IdFields = EntityUtils.getFieldsByAnnotations(entityClass, Id.class).get(0);
-        ColumnFields.add(0,IdFields);
+        ColumnFields.add(0, IdFields);
 
         Condition condition = new Condition();
         Statement statement = null;
@@ -40,8 +42,8 @@ public class EntityManagerImpl implements EntityManager{
         T instance = null;
         Field fieldInstance;
 
-        for (ColumnInfo index:columns) {
-            if(index.isId()) {
+        for (ColumnInfo index : columns) {
+            if (index.isId()) {
                 condition.setColumnName(tableName + "." + index.getDbColumnName());
                 condition.setValue(id);
                 queryBuilder.addCondition(condition);
@@ -52,18 +54,18 @@ public class EntityManagerImpl implements EntityManager{
         String myQuery = queryBuilder.createQuery();
         //System.out.println(myQuery);
 
-        try{
+        try {
             statement = con.createStatement();
             resultSet = statement.executeQuery(myQuery);
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 instance = entityClass.newInstance();
 
-                for (ColumnInfo index: columns) {
+                for (ColumnInfo index : columns) {
                     fieldInstance = instance.getClass().getDeclaredField(index.getColumnName());
                     fieldInstance.setAccessible(true);
-                    fieldInstance.set(instance,EntityUtils.
-                            castFromSqlType(resultSet.getObject(index.getDbColumnName()),fieldInstance.getType()));
+                    fieldInstance.set(instance, EntityUtils.
+                            castFromSqlType(resultSet.getObject(index.getDbColumnName()), fieldInstance.getType()));
                 }
             }
         } catch (Exception e) {
@@ -90,7 +92,7 @@ public class EntityManagerImpl implements EntityManager{
             statement = con.createStatement();
             resultSet = statement.executeQuery(myQuery);
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 max = resultSet.getLong(1);
             }
         } catch (Exception e) {
@@ -110,16 +112,15 @@ public class EntityManagerImpl implements EntityManager{
         Connection con = DBManager.getConnection();
         Statement statement = null;
         long currentId = 0;
-        
+
         String tableName = EntityUtils.getTableName(entity.getClass());
         List<ColumnInfo> columns = EntityUtils.getColumns(entity.getClass());
 
-        for (ColumnInfo index:columns) {
-            if(index.isId()) {
-                currentId = getNextIdVal(tableName,index.getDbColumnName());
-                index.setValue(getNextIdVal(tableName,index.getDbColumnName()));
-            }
-            else{
+        for (ColumnInfo index : columns) {
+            if (index.isId()) {
+                currentId = getNextIdVal(tableName, index.getDbColumnName());
+                index.setValue(getNextIdVal(tableName, index.getDbColumnName()));
+            } else {
                 try {
                     Field currentField = entity.getClass().getDeclaredField(index.getColumnName());
                     currentField.setAccessible(true);
@@ -153,7 +154,7 @@ public class EntityManagerImpl implements EntityManager{
             clearConnection(con);
         }
 
-        return findById(entity.getClass(),currentId);
+        return findById(entity.getClass(), currentId);
     }
 
     @Override
@@ -181,14 +182,14 @@ public class EntityManagerImpl implements EntityManager{
             statement = con.createStatement();
             resultSet = statement.executeQuery(myQuery);
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 instance = entityClass.newInstance();
 
-                for (ColumnInfo index:columns) {
+                for (ColumnInfo index : columns) {
                     instanceField = instance.getClass().getDeclaredField(index.getColumnName());
                     instanceField.setAccessible(true);
-                    instanceField.set(instance,EntityUtils.
-                            castFromSqlType(resultSet.getObject(index.getDbColumnName()),instanceField.getType()));
+                    instanceField.set(instance, EntityUtils.
+                            castFromSqlType(resultSet.getObject(index.getDbColumnName()), instanceField.getType()));
                 }
                 myList.add(instance);
             }
@@ -217,14 +218,14 @@ public class EntityManagerImpl implements EntityManager{
         String currentColumnName = null;
         long currentId = 0;
 
-        for (ColumnInfo index:columns) {
+        for (ColumnInfo index : columns) {
             try {
                 Field currentField = entity.getClass().getDeclaredField(index.getColumnName());
                 currentField.setAccessible(true);
                 index.setValue(currentField.get(entity));
 
                 if (index.isId()) {
-                    if (index.getValue() == null){
+                    if (index.getValue() == null) {
                         System.out.println("Id-ul nu poate fi null!");
                         clearConnection(con);
                         return null;
@@ -264,7 +265,7 @@ public class EntityManagerImpl implements EntityManager{
             clearConnection(con);
         }
 
-        return (T) findById(entity.getClass(),currentId);
+        return (T) findById(entity.getClass(), currentId);
     }
 
     @Override
@@ -280,14 +281,14 @@ public class EntityManagerImpl implements EntityManager{
         String currentColumnName = null;
         long currentId = 0;
 
-        for (ColumnInfo index:columns) {
+        for (ColumnInfo index : columns) {
             try {
                 Field currentField = entity.getClass().getDeclaredField(index.getColumnName());
                 currentField.setAccessible(true);
                 index.setValue(currentField.get(entity));
 
                 if (index.isId()) {
-                    if (index.getValue() == null){
+                    if (index.getValue() == null) {
                         System.out.println("Id-ul nu poate fi null!");
                         clearConnection(con);
                         return;
@@ -353,11 +354,11 @@ public class EntityManagerImpl implements EntityManager{
         queryBuilder.addQueryColumns(columns);
 
         //Verify if columns from condition exist in my table
-        for (Map.Entry<String,Object> index:params.entrySet()) {
+        for (Map.Entry<String, Object> index : params.entrySet()) {
 
             ok = false;
 
-            for (ColumnInfo ind:columns) {
+            for (ColumnInfo ind : columns) {
                 if (index.getKey().equals(ind.getDbColumnName()))
                     ok = true;
             }
@@ -369,9 +370,9 @@ public class EntityManagerImpl implements EntityManager{
             }
         }
 
-        for (ColumnInfo index:columns) {
+        for (ColumnInfo index : columns) {
             try {
-                if (params.containsKey(index.getDbColumnName())){
+                if (params.containsKey(index.getDbColumnName())) {
                     condition = new Condition();
                     ok = true;
 
@@ -401,14 +402,14 @@ public class EntityManagerImpl implements EntityManager{
             statement = con.createStatement();
             resultSet = statement.executeQuery(myQuery);
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 instance = entityClass.newInstance();
 
-                for (ColumnInfo index:columns) {
+                for (ColumnInfo index : columns) {
                     instanceField = instance.getClass().getDeclaredField(index.getColumnName());
                     instanceField.setAccessible(true);
-                    instanceField.set(instance,EntityUtils.
-                            castFromSqlType(resultSet.getObject(index.getDbColumnName()),instanceField.getType()));
+                    instanceField.set(instance, EntityUtils.
+                            castFromSqlType(resultSet.getObject(index.getDbColumnName()), instanceField.getType()));
                 }
                 myList.add(instance);
             }
@@ -422,6 +423,86 @@ public class EntityManagerImpl implements EntityManager{
         }
 
         return myList;
+    }
+
+    @Override
+    public <T> List<T> myFindMethod(String string) {
+        Connection con = DBManager.getConnection();
+
+        String tableName = EntityUtils.getTableName(Employee.class);
+        List<ColumnInfo> columnsEmployee = EntityUtils.getColumns(Employee.class);
+        List<ColumnInfo> columnsDepartment = EntityUtils.getColumns(Department.class);
+
+        Object currentParam = null;
+        String currentColumnName = null;
+
+        String myQuery = "SELECT e.FIRST_NAME, e.LAST_NAME, d.DEPARTMENT_NAME\n" +
+                "FROM EMPLOYEES e JOIN departments d\n" +
+                "   ON e.department_id = d.department_id\n" +
+                "   WHERE LOWER(d.department_name) like LOWER('%" + string + "%')";
+
+//        String myQuery = "SELECT e.*, d.*\n" +
+//                "FROM EMPLOYEES e JOIN departments d\n" +
+//                "   ON e.department_id = d.department_id\n" +
+//                "   WHERE LOWER(d.department_name) like LOWER('%" + string + "%')";
+        System.out.println(myQuery);
+
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        Employee instanceEmp = null;
+        Field instanceFieldEmp;
+        Department instanceDep = null;
+        Field instanceFieldDep;
+        ArrayList<T> myList = new ArrayList<>();
+
+        try {
+            statement = con.createStatement();
+            resultSet = statement.executeQuery(myQuery);
+
+            while (resultSet.next()) {
+                instanceEmp = new Employee();
+                instanceDep = new Department();
+
+                for (ColumnInfo index : columnsEmployee) {
+                    instanceFieldEmp = instanceEmp.getClass().getDeclaredField(index.getColumnName());
+                    if (index.getDbColumnName().equalsIgnoreCase("FIRST_NAME") ||
+                            index.getDbColumnName().equalsIgnoreCase("LAST_NAME")) {
+                    instanceFieldEmp.setAccessible(true);
+                    instanceFieldEmp.set(instanceEmp, EntityUtils.
+                            castFromSqlType(resultSet.getObject(index.getDbColumnName()), instanceFieldEmp.getType()));
+                    }
+                }
+
+                myList.add((T) instanceEmp);
+
+                for (ColumnInfo index : columnsDepartment) {
+                    instanceFieldDep = instanceDep.getClass().getDeclaredField(index.getColumnName());
+                    if (index.getDbColumnName().equalsIgnoreCase("DEPARTMENT_NAME")) {
+                    instanceFieldDep.setAccessible(true);
+                    instanceFieldDep.set(instanceDep, EntityUtils.
+                            castFromSqlType(resultSet.getObject(index.getDbColumnName()), instanceFieldDep.getType()));
+                    }
+                }
+
+                myList.add((T) instanceDep);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Eroare: " + e);
+        } finally {
+            clearResultSet(resultSet);
+            clearStatement(statement);
+            clearConnection(con);
+        }
+
+        return myList;
+    }
+
+    @Override
+    public <T> void multipleInsert(List<T> enities) {
+
     }
 
     public void clearResultSet(ResultSet resultSet) {
