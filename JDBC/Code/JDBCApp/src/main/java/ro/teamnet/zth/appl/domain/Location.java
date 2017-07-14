@@ -74,12 +74,8 @@ public class Location {
 
     @Override
     public String toString() {
-        return "Location{" +
-                "id=" + id +
-                ", streetAddress='" + streetAddress + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", city='" + city + '\'' +
-                ", stateProvince='" + stateProvince + '\'' +
-                '}';
+        return "Location_id: " + id + " ; streetAddress: " + streetAddress + " ; postalCode: " + postalCode +
+                " ; city: " + city + " ; stateProvince: " + stateProvince +"\n";
+
     }
 }
